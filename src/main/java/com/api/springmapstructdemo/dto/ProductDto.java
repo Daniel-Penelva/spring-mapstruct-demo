@@ -8,7 +8,7 @@ public class ProductDto {
     private int id;
     private String name;
     private String description;
-    private int quantity;
+    private String quantity;
     private long price;
     private String itemId;
 
@@ -36,11 +36,11 @@ public class ProductDto {
         this.description = description;
     }
 
-    public int getQuantity() {
+    public String getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
+    public void setQuantity(String quantity) {
         this.quantity = quantity;
     }
 
