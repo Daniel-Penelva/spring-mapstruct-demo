@@ -1,6 +1,9 @@
 package com.api.springmapstructdemo.dto;
 
+import com.api.springmapstructdemo.model.Item;
 import jakarta.persistence.Id;
+
+import java.util.List;
 
 public class ProductDto {
 
@@ -11,6 +14,8 @@ public class ProductDto {
     private String quantity;
     private long price;
     private String itemId;
+
+    private List<Item> itemsList;
 
     public int getId() {
         return id;
@@ -58,5 +63,13 @@ public class ProductDto {
 
     public void setItemId(String itemId) {
         this.itemId = itemId;
+    }
+
+    public List<Item> getItemsList() {
+        return itemsList;
+    }
+
+    public void setItemsList(List<Item> itemsList) {
+        this.itemsList = itemsList;
     }
 }

@@ -4,6 +4,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+import java.util.List;
+
 @Entity
 @Table(name = "product")
 public class Product {
@@ -14,6 +16,8 @@ public class Product {
     private int quantity;
     private long price;
     private String itemId;
+
+    private List<Item> items;
 
     public int getId() {
         return id;
@@ -61,5 +65,13 @@ public class Product {
 
     public void setItemId(String itemId) {
         this.itemId = itemId;
+    }
+
+    public List<Item> getItems() {
+        return items;
+    }
+
+    public void setItems(List<Item> items) {
+        this.items = items;
     }
 }

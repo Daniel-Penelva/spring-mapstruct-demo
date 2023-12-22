@@ -358,9 +358,13 @@ public class ProductMapperImpl implements ProductMapper {
       else {
          productDto.setDescription( "description" );
       }
+      List<Item> list = product.getItems();
+      if ( list != null ) {
+         productDto.setItemsList( new ArrayList<Item>( list ) );
+      }
       productDto.setId( product.getId() );
       productDto.setName( product.getName() );
-      productDto.setQuantity( product.getQuantity() ); // do tipo String
+      productDto.setQuantity( String.valueOf( product.getQuantity() ) );
       productDto.setPrice( product.getPrice() );
 
       productDto.setItemId( UUID.randomUUID().toString() );
@@ -377,10 +381,14 @@ public class ProductMapperImpl implements ProductMapper {
       Product product = new Product();
 
       product.setDesc( productDto.getDescription() );
+      List<Item> list = productDto.getItemsList();
+      if ( list != null ) {
+         product.setItems( new ArrayList<Item>( list ) );
+      }
       product.setId( productDto.getId() );
       product.setName( productDto.getName() );
       if ( productDto.getQuantity() != null ) {
-         product.setQuantity( Integer.parseInt( productDto.getQuantity() ) ); // converte para o tipo Integer
+         product.setQuantity( Integer.parseInt( productDto.getQuantity() ) );
       }
       product.setPrice( productDto.getPrice() );
       product.setItemId( productDto.getItemId() );
@@ -439,9 +447,13 @@ public ProductDto modelToDto(Product product) {
         else {
         productDto.setDescription( "description" );
         }
+        List<Item> list = product.getItems();
+        if ( list != null ) {
+        productDto.setItemsList( new ArrayList<Item>( list ) );
+        }
         productDto.setId( product.getId() );
         productDto.setName( product.getName() );
-        productDto.setQuantity( String.valueOf( product.getQuantity() ) );  // tipo String
+        productDto.setQuantity( String.valueOf( product.getQuantity() ) );
         productDto.setPrice( product.getPrice() );
 
         productDto.setItemId( UUID.randomUUID().toString() );
@@ -456,24 +468,29 @@ public ProductDto modelToDto(Product product) {
 5. **Método `dtoToModel`:**
 
 ```java
-    @Override
-    public Product dtoToModel(ProductDto productDto) {
+@Override
+public Product dtoToModel(ProductDto productDto) {
         if ( productDto == null ) {
-            return null;
+        return null;
         }
 
         Product product = new Product();
 
         product.setDesc( productDto.getDescription() );
+        List<Item> list = productDto.getItemsList();
+        if ( list != null ) {
+        product.setItems( new ArrayList<Item>( list ) );
+        }
         product.setId( productDto.getId() );
         product.setName( productDto.getName() );
         if ( productDto.getQuantity() != null ) {
-        product.setQuantity( Integer.parseInt( productDto.getQuantity() ) ); // converte para o tipo Integer
+        product.setQuantity( Integer.parseInt( productDto.getQuantity() ) );
         }
         product.setPrice( productDto.getPrice() );
+        product.setItemId( productDto.getItemId() );
 
         return product;
-    }
+}
 ```
 - Este método realiza a conversão inversa, convertendo um objeto `ProductDto` de volta para um objeto `Product`.
 - Se o objeto `productDto` for nulo, retorna `null`.

@@ -15,6 +15,7 @@ public interface ProductMapper {
     ProductMapper INSTANCE = Mappers.getMapper(ProductMapper.class);
     @Mapping(source = "product.desc", target = "description", defaultValue = "description") // indica como os campos "desc" e "description" devem ser mapeados.
     @Mapping(target = "itemId", expression = "java(UUID.randomUUID().toString())")
+    @Mapping(source = "product.items", target = "itemsList")
     ProductDto modelToDto(Product product);
 
     @InheritInverseConfiguration
