@@ -10,10 +10,10 @@ import org.mapstruct.factory.Mappers;
 public interface ProductMapper {
 
     ProductMapper INSTANCE = Mappers.getMapper(ProductMapper.class);
-    @Mapping(source = "product.desc", target = "description") // indica como os campos "desc" e "description" devem ser mapeados.
+    @Mapping(source = "product.desc", target = "description", defaultValue = "description") // indica como os campos "desc" e "description" devem ser mapeados.
     ProductDto modelToDto(Product product);
 
-    @Mapping(source = "productDto.description", target = "desc")
+    @Mapping(source = "productDto.description", target = "desc", defaultValue = "description")
     Product dtoToModel(ProductDto productDto); // Use os nomes das propriedades diretamente
 
 }

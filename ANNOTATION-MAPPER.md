@@ -1,4 +1,4 @@
-# Mapstruc
+# MapStruct
 
 [MapStruct](https://mapstruct.org/) é usada para simplificar o processo de mapeamento entre objetos. Ele oferece uma maneira fácil e declarativa de definir como os objetos devem ser mapeados uns para os outros, eliminando a necessidade de escrever manualmente o código de mapeamento tedioso e propenso a erros.
 
@@ -34,9 +34,9 @@ MapStruct é um processador de anotação que está conectado ao compilador Java
 
 MapStruct usa padrões sensatos, mas sai do seu caminho quando se trata de configurar ou implementar um comportamento especial.
 
-## InstalaçãoFonte:
+## Instalação
 
-[Documentação instalação  mapstruct](https://mapstruct.org/documentation/installation/)
+Fonte: [Documentação instalação  mapstruct](https://mapstruct.org/documentation/installation/)
 
 ### Apache Maven
 
@@ -221,10 +221,10 @@ public interface ProductMapper {
 
     ProductMapper INSTANCE = Mappers.getMapper(ProductMapper.class);
 
-    @Mapping(source = "product.desc", target = "description")
+   @Mapping(source = "product.desc", target = "description", defaultValue = "description")
     ProductDto modelToDto(Product product);
 
-    @Mapping(source = "productDto.description", target = "desc")
+   @Mapping(source = "productDto.description", target = "desc", defaultValue = "description")
     Product dtoToModel(ProductDto productDto);
 
 }
@@ -258,6 +258,11 @@ Analisando o código em detalhes:
    ```
     - Define um método de mapeamento chamado `modelToDto` que converte um objeto `Product` para um objeto `ProductDto`.
     - A anotação `@Mapping` indica como os campos devem ser mapeados. Neste caso, o campo `desc` de `product` é mapeado para o campo `description` de `ProductDto`.
+   
+**Explicar as propriedades utilizadas:**
+   - `source:` Indica a propriedade de origem que será usada no mapeamento. No meu caso, productDto.description significa que o valor será retirado da propriedade description do objeto productDto. 
+   - `target:` Indica a propriedade de destino para a qual o valor será mapeado. No meu caso, desc significa que o valor será atribuído à propriedade desc do objeto de destino. 
+   - `defaultValue:` Especifica um valor padrão a ser usado caso a propriedade de origem (source) seja nula. Neste exemplo, se productDto.description for nulo, o valor padrão "description" será utilizado.
 
 5. **Método `dtoToModel`:**
    ```java
@@ -320,39 +325,49 @@ import javax.annotation.processing.Generated;
 )
 public class ProductMapperImpl implements ProductMapper {
 
-    @Override
-    public ProductDto modelToDto(Product product) {
-        if ( product == null ) {
-            return null;
-        }
+   @Override
+   public ProductDto modelToDto(Product product) {
+      if ( product == null ) {
+         return null;
+      }
 
-        ProductDto productDto = new ProductDto();
+      ProductDto productDto = new ProductDto();
 
-        productDto.setDescription( product.getDesc() );
-        productDto.setId( product.getId() );
-        productDto.setName( product.getName() );
-        productDto.setQuantity( product.getQuantity() );
-        productDto.setPrice( product.getPrice() );
+      if ( product.getDesc() != null ) {
+         productDto.setDescription( product.getDesc() );
+      }
+      else {
+         productDto.setDescription( "description" );
+      }
+      productDto.setId( product.getId() );
+      productDto.setName( product.getName() );
+      productDto.setQuantity( product.getQuantity() );
+      productDto.setPrice( product.getPrice() );
 
-        return productDto;
-    }
+      return productDto;
+   }
 
-    @Override
-    public Product dtoToModel(ProductDto productDto) {
-        if ( productDto == null ) {
-            return null;
-        }
+   @Override
+   public Product dtoToModel(ProductDto productDto) {
+      if ( productDto == null ) {
+         return null;
+      }
 
-        Product product = new Product();
+      Product product = new Product();
 
-        product.setDesc( productDto.getDescription() );
-        product.setId( productDto.getId() );
-        product.setName( productDto.getName() );
-        product.setQuantity( productDto.getQuantity() );
-        product.setPrice( productDto.getPrice() );
+      if ( productDto.getDescription() != null ) {
+         product.setDesc( productDto.getDescription() );
+      }
+      else {
+         product.setDesc( "description" );
+      }
+      product.setId( productDto.getId() );
+      product.setName( productDto.getName() );
+      product.setQuantity( productDto.getQuantity() );
+      product.setPrice( productDto.getPrice() );
 
-        return product;
-    }
+      return product;
+   }
 }
 ```
 Analisando o código em detalhes:
