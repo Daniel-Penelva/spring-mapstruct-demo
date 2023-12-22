@@ -13,6 +13,7 @@ public class Product {
     private String desc;
     private int quantity;
     private long price;
+    private String itemId;
 
     public int getId() {
         return id;
@@ -52,5 +53,13 @@ public class Product {
 
     public void setPrice(long price) {
         this.price = price;
+    }
+
+    public String getItemId() {
+        return itemId;
+    }
+
+    public void setItemId(String itemId) {
+        this.itemId = itemId;
     }
 }

@@ -216,13 +216,14 @@ import org.mapstruct.factory.Mappers;
 import com.api.springmapstructdemo.dto.ProductDto;
 import com.api.springmapstructdemo.model.Product;
 
-@Mapper
+@Mapper(imports = UUID.class)
 public interface ProductMapper {
 
     ProductMapper INSTANCE = Mappers.getMapper(ProductMapper.class);
 
-   @Mapping(source = "product.desc", target = "description", defaultValue = "description")
-    ProductDto modelToDto(Product product);
+   @Mapping(source = "product.desc", target = "description", defaultValue = "description") // indica como os campos "desc" e "description" devem ser mapeados.
+   @Mapping(target = "itemId", expression = "java(UUID.randomUUID().toString())")
+   ProductDto modelToDto(Product product);
 
    @Mapping(source = "productDto.description", target = "desc", defaultValue = "description")
     Product dtoToModel(ProductDto productDto);
@@ -233,11 +234,14 @@ public interface ProductMapper {
 Analisando o código em detalhes:
 
 1. **Anotação `@Mapper`:**
-   ```java
-   @Mapper
-   ```
-    - Indica que esta interface é uma interface de mapeamento do MapStruct. O MapStruct usará esta interface para gerar automaticamente a implementação das operações de mapeamento entre `Product` e `ProductDto`.
-    - A anotação `@Mapper` é colocada no nível da interface que contém métodos de mapeamento. Ela indica ao MapStruct que essa interface contém a lógica para mapear atributos de um objeto para outro.
+
+```java
+@Mapper(imports = UUID.class)
+```
+   - Indica que esta interface é uma interface de mapeamento do MapStruct. O MapStruct usará esta interface para gerar automaticamente a implementação das operações de mapeamento entre `Product` e `ProductDto`.
+   - A anotação `@Mapper` é colocada no nível da interface que contém métodos de mapeamento. Ela indica ao MapStruct que essa interface contém a lógica para mapear atributos de um objeto para outro.
+   - A anotação `@Mapper(imports = UUID.class)` é uma configuração específica do MapStruct para incluir a importação da classe UUID na implementação gerada pelo MapStruct.
+   - `imports = UUID.class`: Esta parte específica indica que a classe `UUID` deve ser importada na implementação gerada. Isso significa que, sempre que a implementação do MapStruct precisar usar a classe `UUID` (por exemplo, ao realizar um mapeamento envolvendo UUID), a implementação gerada incluirá uma declaração de importação para `UUID`.
 
 2. **Declaração da Interface `ProductMapper`:**
    ```java
@@ -252,17 +256,32 @@ Analisando o código em detalhes:
     - Declaração de uma instância estática `INSTANCE` da interface `ProductMapper`. Esta instância será usada para obter a implementação gerada pelo MapStruct para realizar os mapeamentos.
 
 4. **Método `modelToDto`:**
-   ```java
-   @Mapping(source = "product.desc", target = "description")
-   ProductDto modelToDto(Product product);
-   ```
-    - Define um método de mapeamento chamado `modelToDto` que converte um objeto `Product` para um objeto `ProductDto`.
-    - A anotação `@Mapping` indica como os campos devem ser mapeados. Neste caso, o campo `desc` de `product` é mapeado para o campo `description` de `ProductDto`.
-   
-**Explicar as propriedades utilizadas:**
-   - `source:` Indica a propriedade de origem que será usada no mapeamento. No meu caso, productDto.description significa que o valor será retirado da propriedade description do objeto productDto. 
-   - `target:` Indica a propriedade de destino para a qual o valor será mapeado. No meu caso, desc significa que o valor será atribuído à propriedade desc do objeto de destino. 
+
+```java
+@Mapping(source = "product.desc", target = "description", defaultValue = "description")
+@Mapping(target = "itemId", expression = "java(UUID.randomUUID().toString())")
+ProductDto modelToDto(Product product);
+```
+   - Define um método de mapeamento chamado `modelToDto` que converte um objeto `Product` para um objeto `ProductDto`.
+   - A anotação `@Mapping` indica como os campos devem ser mapeados. Neste caso, o campo `desc` de `product` é mapeado para o campo `description` de `ProductDto`.
+
+   I. **`@Mapping(source = "product.desc", target = "description", defaultValue = "description")`:**
+   - Indica um mapeamento específico entre a propriedade `desc` de `Product` e a propriedade `description` de `ProductDto`.
+
+   **Explicando as propriedades utilizadas:**
+   - `source:` Indica a propriedade de origem que será usada no mapeamento. No meu caso, productDto.description significa que o valor será retirado da propriedade description do objeto productDto. Ou seja, Indica que o valor deve ser buscado na propriedade `desc` do objeto `Product`. 
+   - `target:` Indica a propriedade de destino para a qual o valor será mapeado. No meu caso, desc significa que o valor será atribuído à propriedade desc do objeto de destino. Ou seja, Indica que o valor deve ser atribuído à propriedade `description` do objeto `ProductDto`. 
    - `defaultValue:` Especifica um valor padrão a ser usado caso a propriedade de origem (source) seja nula. Neste exemplo, se productDto.description for nulo, o valor padrão "description" será utilizado.
+
+   II. **`@Mapping(target = "itemId", expression = "java(UUID.randomUUID().toString())")`:**
+   - Indica um mapeamento específico para a propriedade `itemId` de `ProductDto`.
+   - `target = "itemId"`: Indica que o valor deve ser atribuído à propriedade `itemId` do objeto `ProductDto`.
+   - `expression = "java(UUID.randomUUID().toString())"`: Especifica uma expressão Java para calcular o valor da propriedade `itemId`. Neste caso, a expressão gera um novo UUID aleatório usando `UUID.randomUUID().toString()`.
+
+Resumindo, o método `modelToDto` da interface de mapeamento `ProductMapper` realiza o seguinte:
+
+- Mapeia a propriedade `desc` de `Product` para a propriedade `description` de `ProductDto`. Se `desc` for nulo, o valor padrão "description" será utilizado.
+- Gera um novo valor para a propriedade `itemId` de `ProductDto` usando um UUID aleatório. Este valor não depende da propriedade `Product.desc` e é gerado independentemente.
 
 5. **Método `dtoToModel`:**
    ```java
@@ -343,6 +362,8 @@ public class ProductMapperImpl implements ProductMapper {
       productDto.setName( product.getName() );
       productDto.setQuantity( product.getQuantity() );
       productDto.setPrice( product.getPrice() );
+
+      productDto.setItemId( UUID.randomUUID().toString() );
 
       return productDto;
    }

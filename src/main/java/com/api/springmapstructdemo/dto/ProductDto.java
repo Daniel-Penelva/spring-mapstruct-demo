@@ -10,6 +10,7 @@ public class ProductDto {
     private String description;
     private int quantity;
     private long price;
+    private String itemId;
 
     public int getId() {
         return id;
@@ -49,5 +50,13 @@ public class ProductDto {
 
     public void setPrice(long price) {
         this.price = price;
+    }
+
+    public String getItemId() {
+        return itemId;
+    }
+
+    public void setItemId(String itemId) {
+        this.itemId = itemId;
     }
 }
