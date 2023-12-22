@@ -216,7 +216,7 @@ import org.mapstruct.factory.Mappers;
 import com.api.springmapstructdemo.dto.ProductDto;
 import com.api.springmapstructdemo.model.Product;
 
-@Mapper(imports = UUID.class)
+@Mapper(componentModel = "spring", imports = UUID.class)
 public interface ProductMapper {
 
     ProductMapper INSTANCE = Mappers.getMapper(ProductMapper.class);
@@ -236,12 +236,15 @@ Analisando o código em detalhes:
 1. **Anotação `@Mapper`:**
 
 ```java
-@Mapper(imports = UUID.class)
+@Mapper(componentModel = "spring", imports = UUID.class)
 ```
    - Indica que esta interface é uma interface de mapeamento do MapStruct. O MapStruct usará esta interface para gerar automaticamente a implementação das operações de mapeamento entre `Product` e `ProductDto`.
    - A anotação `@Mapper` é colocada no nível da interface que contém métodos de mapeamento. Ela indica ao MapStruct que essa interface contém a lógica para mapear atributos de um objeto para outro.
    - A anotação `@Mapper(imports = UUID.class)` é uma configuração específica do MapStruct para incluir a importação da classe UUID na implementação gerada pelo MapStruct.
    - `imports = UUID.class`: Esta parte específica indica que a classe `UUID` deve ser importada na implementação gerada. Isso significa que, sempre que a implementação do MapStruct precisar usar a classe `UUID` (por exemplo, ao realizar um mapeamento envolvendo UUID), a implementação gerada incluirá uma declaração de importação para `UUID`.
+   - A propriedade `componentModel` na anotação `@Mapper` em MapStruct é usada para configurar a forma como os componentes gerados (como os métodos estáticos `Mappers.getMapper()`) são tratados pelo framework. O valor spring para a propriedade componentModel indica que o MapStruct deve gerar os mappers como componentes Spring gerenciados pelo contêiner Spring IoC (Inversion of Control).
+   - Quando define `componentModel = "spring"`, MapStruct gera uma classe de fábrica especial que é anotada com `@Component` do Spring. Isso permite que você injete os mappers gerados como beans gerenciados pelo Spring, facilitando a integração dos mappers MapStruct em um aplicativo Spring.
+   - Neste exemplo, `@Mapper(componentModel = "spring")` configura o MapStruct para gerar a classe de fábrica `ProductMapperImpl` como um componente Spring. Você pode então injetar `ProductMapper` em outras partes do seu código como qualquer outro bean gerenciado pelo Spring.
 
 2. **Declaração da Interface `ProductMapper`:**
    ```java
@@ -342,6 +345,7 @@ import javax.annotation.processing.Generated;
     date = "2023-12-20T23:17:48-0300",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.7 (Oracle Corporation)"
 )
+@Component
 public class ProductMapperImpl implements ProductMapper {
 
    @Override
