@@ -1,8 +1,6 @@
 package com.api.springmapstructdemo.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.util.List;
 
@@ -10,13 +8,17 @@ import java.util.List;
 @Table(name = "product")
 public class Product {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     private String name;
-    private String desc;
+    private String description;
     private int quantity;
     private long price;
     private String itemId;
 
+    // Um produto pode ter vários itens
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "product_id") // Coluna na tabela Item que faz referência a Product
     private List<Item> items;
 
     public int getId() {
@@ -35,12 +37,12 @@ public class Product {
         this.name = name;
     }
 
-    public String getDesc() {
-        return desc;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDesc(String desc) {
-        this.desc = desc;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public int getQuantity() {
